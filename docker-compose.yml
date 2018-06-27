@@ -17,6 +17,20 @@ services:
     networks:
       - default # postgres datasource grafana
       - pgnet
+  python:
+    build: ./python
+    command: python -m http.server 8000
+    depends_on:
+      - postgres
+    volumes:
+      - ./python/script:/usr/src/app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}@${POSTGRES_PASSWORD}/${POSTGRES_DB}"
+    networks:
+      - default # postgres datasource grafana
+      - pgnet
 
 networks:
   pgnet:
