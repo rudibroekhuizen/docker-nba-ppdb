@@ -9,11 +9,32 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./postgres/conf.d:/conf.d
+      - ./data:/data
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REPLICATION_USER=${REPLICATION_USER}
       - REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    networks:
+      - default # postgres datasource grafana
+      - pgnet
+  python:
+    build: ./python
+    command: python -m http.server 8000
+    depends_on:
+      - postgres
+    volumes:
+      - ./python/script:/usr/src/app
+      - ./python/logs:/var/log/app
+      - ./data:/data
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}@${POSTGRES_PASSWORD}/${POSTGRES_DB}"
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_DB: ${POSTGRES_DB}
+      DATABASE_HOST: ${POSTGRES_HOST}
     networks:
       - default # postgres datasource grafana
       - pgnet
