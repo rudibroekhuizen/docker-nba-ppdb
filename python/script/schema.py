@@ -6,7 +6,6 @@ db = Database()
 db.bind(provider='postgres', user=env['DATABASE_USER'], password=env['DATABASE_PASSWORD'], host=env['DATABASE_HOST'], database=env['DATABASE_DB'])
 
 class Document(db.Entity):
-    id = PrimaryKey(int, auto=True)
     record_id = Required(str, unique=True)
     source = Required(str)
     nds_index = Optional(str)
@@ -16,5 +15,7 @@ class Document(db.Entity):
     status = Optional(str)
     datum = Optional(datetime, default=lambda: datetime.now())
     documenttype = Optional(str)
+    PrimaryKey(record_id,source)
+    
 
 db.generate_mapping(create_tables=True)
