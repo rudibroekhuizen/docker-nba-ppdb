@@ -26,6 +26,18 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5050:5050"
+    volumes:
+      - ./pgadmin:/root/.pgadmin
+
+  sqlpad:
+    image: 'sqlpad/sqlpad:latest'
+    hostname: 'sqlpad'
+    ports:
+      - "3030:3000"
+    environment:
+      - SQLPAD_DEBUG=TRUE
+    volumes:
+      - sqlpad:/var/lib/sqlpad
 
   python:
     build: ./python
