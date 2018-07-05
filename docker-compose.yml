@@ -18,6 +18,15 @@ services:
     networks:
       - default # postgres datasource grafana
       - pgnet
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:5050"
+
   python:
     build: ./python
     command: python -m http.server 8000
