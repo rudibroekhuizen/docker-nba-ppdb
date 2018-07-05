@@ -13,8 +13,6 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - REPLICATION_USER=${REPLICATION_USER}
-      - REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
     networks:
       - default # postgres datasource grafana
       - pgnet
