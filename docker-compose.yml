@@ -3,7 +3,7 @@ version: '3'
 services:
   traefik:
     image: traefik:1.6.5
-    #restart: always
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -26,7 +26,7 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./postgres/conf.d:/conf.d
-      - ./data:/data
+      - miniodata:/tmp
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -75,6 +75,25 @@ services:
       - default # postgres datasource grafana
       - pgnet
 
+  minio:
+    image: minio/minio
+    restart: unless-stopped
+    command: "server /data"
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-12345}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-12345678}
+    volumes:
+      - miniodata:/data"
+      #- "/data/minioconfig:/root/.minio"
+    networks:
+      - default
+    labels:
+      - "traefik.backend=minio"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=9000"
+      - ${MINIO_URL_CONFIG:-traefik.frontend.rule=Host:minio.ppdb.naturalis.nl}
+
 networks:
   pgnet:
     external: true
@@ -84,3 +103,4 @@ networks:
 volumes:
   pglog:
   pgdata:
+  miniodata:
