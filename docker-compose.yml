@@ -1,6 +1,23 @@
 version: '3'
 
 services:
+  traefik:
+    image: traefik:1.6.5
+    #restart: always
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${TRAEFIK_TOML_FILE:-./traefik/ppdb.traefik.toml}:/traefik.toml
+      #- ${ACME_JSON:-./traefik/acme.json}:/acme.json
+    labels:
+      - "traefik.enable=false"
+      - "traefik.port=8080"
+      - ${TRAEFIK_URL_CONFIG:-traefik.frontend.rule=Host:traefik.docker.localhost}
+
   postgres:
     build: ./postgres
     ports:
