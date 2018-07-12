@@ -26,7 +26,8 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./postgres/conf.d:/conf.d
-      - miniodata:/tmp
+      - ./data:/data # python data share
+      - miniodata:/tmp # minio data share
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -44,6 +45,7 @@ services:
 #    ports:
 #      - "5050:80"
     networks:
+      - web
       - pgnet
     volumes:
       - ./pgadmin:/root/.pgadmin
@@ -88,6 +90,7 @@ services:
       - miniodata:/data"
       #- "/data/minioconfig:/root/.minio"
     networks:
+      - web
       - default
     labels:
       - "traefik.backend=minio"
