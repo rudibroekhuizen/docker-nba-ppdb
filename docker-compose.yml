@@ -40,9 +40,9 @@ services:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     expose:
-      - "5050"
-    ports:
-      - "5050:80"
+      - "80"
+#    ports:
+#      - "5050:80"
     networks:
       - pgnet
     volumes:
@@ -51,7 +51,7 @@ services:
       - "traefik.backend=naturalis-pgadmin"
       - "traefik.docker.network=web"
       - "traefik.enable=true"
-      - "traefik.port=5050"
+      - "traefik.port=80"
       - ${GRAFANA_URL_CONFIG:-traefik.frontend.rule=Host:pgadmin.ppdb.naturalis.nl}
 
   python:
