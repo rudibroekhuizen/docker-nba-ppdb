@@ -34,7 +34,7 @@ entryPoint = "https"
   [acme.httpChallenge]
   entryPoint = "http"
 
-#[[acme.domains]]
-#  main = "grafana.ppdb.naturalis.nl"
+[[acme.domains]]
+  main = "minio.ppdb.naturalis.nl"
 [[acme.domains]]
   main = "pgadmin.ppdb.naturalis.nl"
