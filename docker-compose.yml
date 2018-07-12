@@ -82,6 +82,8 @@ services:
     environment:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-12345}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-12345678}
+    expose:
+      - "9000"
     volumes:
       - miniodata:/data"
       #- "/data/minioconfig:/root/.minio"
