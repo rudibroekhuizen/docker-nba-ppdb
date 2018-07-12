@@ -22,20 +22,20 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    expose:
+      - "5050"
     ports:
       - "5050:80"
+    networks:
+      - pgnet
     volumes:
       - ./pgadmin:/root/.pgadmin
-
-  sqlpad:
-    image: 'sqlpad/sqlpad:latest'
-    hostname: 'sqlpad'
-    ports:
-      - "3030:3000"
-    environment:
-      - SQLPAD_DEBUG=TRUE
-    volumes:
-      - sqlpad:/var/lib/sqlpad
+    labels:
+      - "traefik.backend=naturalis-pgadmin"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=5050"
+      - ${GRAFANA_URL_CONFIG:-traefik.frontend.rule=Host:pgadmin.ppdb.naturalis.nl}
 
   python:
     build: ./python
@@ -61,8 +61,9 @@ services:
 networks:
   pgnet:
     external: true
+  web:
+    external: true
 
 volumes:
   pglog:
   pgdata:
-  sqlpad:
