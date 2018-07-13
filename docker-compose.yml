@@ -89,7 +89,7 @@ services:
     expose:
       - "9000"
     volumes:
-      - miniodata:/data"
+      - miniodata:/data
       #- "/data/minioconfig:/root/.minio"
     networks:
       - web
