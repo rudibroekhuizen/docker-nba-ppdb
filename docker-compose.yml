@@ -27,7 +27,7 @@ services:
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./postgres/conf.d:/conf.d
       - ./data:/data # python data share
-      - miniodata:/tmp # minio data share
+      - miniodata:/mnt/miniodata # minio data share
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
