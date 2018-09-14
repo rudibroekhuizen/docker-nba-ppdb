@@ -1,1 +1,3 @@
-# docker-nba-ppdb
+# docker-ppdb
+
+Pre-processing database for Netherlands Biodiversity API.
