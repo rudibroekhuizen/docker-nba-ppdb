@@ -1,4 +1,4 @@
-FROM postgres:10.4
+FROM postgres:10.5
 
 RUN apt-get update && \
 apt-get install -y sudo vim curl wget unzip net-tools iputils-ping parallel jq
