@@ -1,4 +1,5 @@
 import json
+import sys
 import logging
 from schema import *
 from pony.orm import *
@@ -36,7 +37,7 @@ class JsonImporter():
         }
         self.line = ""
 
-    def mark_time(self):
+    def markTime(self):
         if (self.counter['start'] == 0) :
             self.counter['start'] = timer()
         self.counter['end'] = timer()
@@ -44,21 +45,20 @@ class JsonImporter():
         if not (self.counter['lines'] % 1000) :
             print('.', end='', flush=True)
 
-
-    def handle_line(self):
+    def handleLine(self):
         self.counter['lines'] += 1
         rec = json.loads(self.line.strip())
         json_hash = md5(self.line.encode('utf-8').strip()).hexdigest()
 
         document = Document.get(record_id = rec['unitID'])
-        if (document):
-            if (json_hash != document.hash) :
-                self.updateDocument(document,rec,json_hash)
-            else :
-                self.counter['skipped'] += 1
-                logger.debug("%d - Not updated: %s - %0.2f" % (self.counter['lines'], rec['unitID'], self.counter['elapsed']))
-        else :
-            self.storeDocument(rec,json_hash)
+        #if (document):
+        #    if (json_hash != document.hash) :
+        #        self.updateDocument(document,rec,json_hash)
+        #    else :
+        #        self.counter['skipped'] += 1
+        #        logger.debug("%d - Not updated: %s - %0.2f" % (self.counter['lines'], rec['unitID'], self.counter['elapsed']))
+        #else :
+        self.storeDocument(rec,json_hash)
 
 
     def updateDocument(self, document, rec, json_hash):
@@ -88,7 +88,7 @@ class JsonImporter():
                 documenttype = 'specimen',
                 scientific_name_group = scigroup 
             )
-            logger.info("Document record stored: %s" % (rec['unitID']))
+            #logger.info("Document record stored: %s" % (rec['unitID']))
             self.counter['new'] += 1
         except:
             logger.error("Document already stored: %s" % (rec['unitID']))
@@ -96,15 +96,15 @@ class JsonImporter():
 
 
     @db_session
-    def parse_json(self):
-        self.mark_time()
+    def parseJson(self):
+        self.markTime()
         with open(self.filename, 'r') as f:
             for self.line in f:
-                self.handle_line()
-                self.mark_time()
-        self.report()
+                self.handleLine()
+                self.markTime()
+        self.executionReport()
 
-    def report(self):
+    def executionReport(self):
         print('.')
         logger.info("Execution time %0.2f seconds" % (self.counter['elapsed']))
         logger.info("%d lines processed" % (self.counter['lines']))
@@ -112,5 +112,10 @@ class JsonImporter():
         logger.info("%d records updated" % (self.counter['updated']))
         logger.info("%d records skipped" % (self.counter['skipped']))
                 
-importer = JsonImporter(filename='/data/validation-output-20180626-104522--000.json')
-importer.parse_json()
+def main(jsonfile):
+    # '/data/validation-output-20180626-104522--000.json'
+    importer = JsonImporter(filename=jsonfile)
+    importer.parseJson()
+
+if __name__ == "__main__":
+    main(sys.argv[1])
