@@ -1,0 +1,15 @@
+{
+  "Notebook": {
+    "Header": true,
+    "Toolbar": true
+  },
+  "Cell": {
+    "cm_config": {
+      "lineNumbers": true
+    }
+  },
+  "load_extensions": {
+    "vim_binding/vim_binding": true,
+    "code_prettify/code_prettify": true
+  }
+}
